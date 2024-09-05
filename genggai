@@ -1,0 +1,43 @@
+        x3D = cv::Matx31f(x3D_h.get_minor<3,1>(0,0)(0) / x3D_h(3)
+                          , x3D_h.get_minor<3,1>(0,0)(1) / x3D_h(3)
+                          , x3D_h.get_minor<3,1>(0,0)(2) / x3D_h(3));
+我是如何编译V0.4的：
+第一布更改 ORBSLAM3中的 Cmakelist：先把C++11环城C++14  再把Eigen3 3.1.0 中的3.1.0去掉 （g20的也同样这样操作）
+然后我要参考这个网站：https://github.com/UZ-SLAMLab/ORB_SLAM3/issues/300  去更改新的东西
+最后我不用脚本编译，我选择一步一步编译，成功了
+
+
+
+wrapper包奇怪事件：eigan3的打印一直说有问题，把他去掉竟然成功编译了！
+做法：在src的 camkelist修改如下:
+find_package(Eigen3)
+MESSAGE("Eigen 3 VERSION:")
+#MESSAGE(${Eigen3_VERSION})
+
+
+egoplanner 安装感悟：eigen3的安装其实有两种路径，一种是安装在usr/loacl/include 一种在usr/include
+sudo cp -r /usr/local/include/eigen3 /usr/include 
+sudo cp -r /usr/local/include/eigen3 /usr/local/include 
+安装的时候建议都安装一编
+
+roslaunch oafd slam.launch问题：
+额，很莫名其妙的被解决了，在这里列出我们实现的步骤：
+由于错误提示我们找不到orb_slam3_ros_wrapper
+于是我们在bashrc最后一行中加入：
+export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:~/catkin_build/src/orb_slam3_ros_wrapper
+在运行此命令时，我们应该进入catkinbuild工作区，然后 source devel/getbash.sh
+最后运行此命令即可
+
+
+
+
+roslaunch oafd tello.launch
+提示没有该模型，把这个错误放到网上去，就找到答案了。
+解决方法：
+pip install djitellopy
+
+
+
+
+2024.9.5
+这是历史性的一刻，我终于复现了该项目
